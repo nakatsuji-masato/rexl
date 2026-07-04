@@ -8,11 +8,7 @@
     "scripts": {
         "build:js": "node build.js",
         "build:types": "tsc",
-        "build": "npm run build:js",
-        "prepare": "npm run build"
-    },
-    "dependencies": {
-        "esbuild": "^0.28.1"
+        "build": "npm run build"
     },
     "peerDependencies": {
         "react": "^19.0.0",
@@ -21,6 +17,7 @@
     "devDependencies": {
         "@types/react": "^19.2.17",
         "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react-dom": "^19.0.0",
+        "esbuild": "^0.28.1"
     }
 }
