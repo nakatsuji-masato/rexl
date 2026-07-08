@@ -15,8 +15,18 @@ export class RTC {
         this.element = element;
     }
 
-    public getPath() {
-        return this.path;
+    public getPath(params?: {[name: string]: string | number}) {
+        let path = this.path;
+        if (params) {
+            const c = Object.keys(params);
+            for(let n = 0 ; n < c.length ; n++) {
+                const name = c[n];
+                const value = params[name];
+                path = path.replaceAll(":" + name, value.toString());
+                path = path.replaceAll(":" + name + "?", value.toString());
+            }
+        }
+        return path;
     }
     public getELement() {
         return this.element;

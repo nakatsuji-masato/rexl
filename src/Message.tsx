@@ -1,6 +1,6 @@
 import { JSX } from "react/jsx-runtime";
 import { alert, success } from "./css/message";
-import { msgCloseEvent, msgOpenEvent } from "./MessageComponent";
+import { msgCloseEvent, msgOpenEvent, Type } from "./MessageComponent";
 
 export interface MessageOptions {
 
@@ -19,7 +19,7 @@ export interface MessageOptions {
  * @param options 
  */
 export const openMessage = (message: string | JSX.Element, options?: MessageOptions) => {
-    msgOpenEvent(message, options);
+    return msgOpenEvent(Type.Message, message, options);
 };
 
 export const closeMessage = (key: string) => {
@@ -29,11 +29,11 @@ export const closeMessage = (key: string) => {
 export const openSuccess = (message: string | JSX.Element, options?: MessageOptions) => {
     if (!options) options = {};
     options.thema = success;
-    msgOpenEvent(message, options);
+    return msgOpenEvent(Type.Message, message, options);
 };
 
 export const openAlert = (message: string | JSX.Element, options?: MessageOptions) => {
     if (!options) options = {};
     options.thema = alert;
-    msgOpenEvent(message, options);
+    return msgOpenEvent(Type.Message, message, options);
 };

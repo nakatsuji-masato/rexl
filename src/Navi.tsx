@@ -7,9 +7,9 @@ export const Navi = {
      * Next Page
      * @param {RTC | string} next
      */
-    next: (next: RTC | string) => {
+    next: (next: RTC | string, params?: {[name: string]: string | number}) => {
         if (next instanceof RTC) {
-            next = next.getPath();
+            next = next.getPath(params);
         }
         window.location.hash = next;
     },

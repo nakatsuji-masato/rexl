@@ -1,61 +1,83 @@
 import { JSX } from "react/jsx-runtime";
 import { ReactInterface } from "./Basic";
 import { main, close } from "./css/message";
+import * as dialogCss from "./css/dialog";
 import { MessageOptions } from "./Message";
+import { DialogOptions } from "./Dialog";
 
-export let msgOpenEvent: (message: string | JSX.Element, options?: MessageOptions) => string;
+export let msgOpenEvent: (Type: Type, message: string | JSX.Element, options?: MessageOptions | DialogOptions) => string;
 export let msgCloseEvent: (key: string) => void;
+
+export enum Type {
+    Message,
+    Dialog,
+}
 
 export const MessageComponent = (props: { react: ReactInterface }) => {
 
     // @ts-ignore
     const [msgBuff, setMsgBuff] = props.react.useState<{ [key: string]: JSX.Element }>({});
 
-    const makeMessage = (message: string | JSX.Element, key: string, options?: MessageOptions) => {
+    const makeMessage = (type: Type, message: string | JSX.Element, key: string, options?: MessageOptions | DialogOptions) => {
 
-        let thema = main;
-        let className = "";
-        if (options) {
-            if (options.thema) {
-                thema = {
-                    ...thema,
-                    ...options.thema,
-                };
+        if (type === Type.Message) {
+            const options_ = options as MessageOptions;
+            let thema = main;
+            let className = "";
+            if (options_) {
+                if (options_.className) className = options_.className;
+                if (options_.thema) {
+                    thema = {
+                        ...thema,
+                        ...options_.thema,
+                    };
+                }
             }
-            if (options.className) className = options.className;
-        }
 
-        return {
-            [key]: (
-                <div style={thema} className={className}>
-                    <span
-                        style={close}
-                        onClick={() => {
-                            msgCloseEvent(key);
-                        }}
-                    >✕</span>
-                    {message}
-                </div>
-            )
-        };
+            return {
+                [key]: (
+                    <div style={thema} className={className}>
+                        <span
+                            style={close}
+                            onClick={() => {
+                                msgCloseEvent(key);
+                            }}
+                        >✕</span>
+                        {message}
+                    </div>
+                )
+            };
+        }
+        else if (type === Type.Dialog) {
+            const options_ = options as DialogOptions;
+            return {
+                [key]: (
+                    <div style={options_.style!.base}>
+                        <div style={options_.style!.window}>
+                            {message}
+                        </div>
+                    </div>
+                ),
+            };
+        }
     };
 
-    msgOpenEvent = (message: string | JSX.Element, options?: MessageOptions) => {
-        console.log("msg open event");
+    msgOpenEvent = (type: Type, message: string | JSX.Element, options?: MessageOptions | DialogOptions) => {
         const key = Math.random().toString();
-        console.log("key=" + key);
-        const newMsg = makeMessage(message, key, options);
+        const newMsg = makeMessage(type, message, key, options);
         // @ts-ignore
         setMsgBuff({
             ...msgBuff,
             ...newMsg,
         });
 
-        if (options) {
-            if (options.timeout) {
-                setTimeout(()=>{
-                    msgCloseEvent(key);
-                }, options.timeout);
+        if (type === Type.Dialog) {
+            if (options) {
+                if ((options as MessageOptions).timeout) {
+                    setTimeout(()=>{
+                        msgCloseEvent(key);
+                    }, (options as MessageOptions).timeout);
+                }
             }
         }
 

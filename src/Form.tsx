@@ -19,7 +19,9 @@ interface TextBoxProps extends BoxProps {
     onChange?: ChangeEventHandler<HTMLInputElement, HTMLInputElement> | undefined,
 }
 
-interface TextNumberProps extends FormInputProps {}
+interface TextNumberProps extends BoxProps {
+    onChange?: ChangeEventHandler<HTMLInputElement, HTMLInputElement> | undefined,
+}
 
 interface TextAreaProps extends BoxProps {
     onChange?: ChangeEventHandler<HTMLTextAreaElement, HTMLTextAreaElement> | undefined,
@@ -85,6 +87,16 @@ export const TextBox = (props: TextBoxProps) => {
         type="text"
         />
     );
+};
+
+export const TextNumber = (props: TextNumberProps) => {
+
+    return (
+        <FormInput 
+        {...props}
+        type="number"
+        />
+    )
 };
 
 export const TextArea = (props: TextAreaProps) => {

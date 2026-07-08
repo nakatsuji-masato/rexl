@@ -8,7 +8,7 @@
     "scripts": {
         "build:js": "node build.js",
         "build:types": "tsc",
-        "build": "npm run build"
+        "build": "npm run build:js"
     },
     "peerDependencies": {
         "react": "^19.0.0",
