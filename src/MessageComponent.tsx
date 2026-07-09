@@ -1,16 +1,17 @@
 import { JSX } from "react/jsx-runtime";
 import { ReactInterface } from "./Basic";
 import { main, close } from "./css/message";
-import * as dialogCss from "./css/dialog";
 import { MessageOptions } from "./Message";
 import { DialogOptions } from "./Dialog";
+import { RexlNotificationOptions } from "./Notification";
 
-export let msgOpenEvent: (Type: Type, message: string | JSX.Element, options?: MessageOptions | DialogOptions) => string;
+export let msgOpenEvent: (Type: Type, message: string | JSX.Element, options?: MessageOptions | DialogOptions | RexlNotificationOptions) => string;
 export let msgCloseEvent: (key: string) => void;
 
 export enum Type {
     Message,
     Dialog,
+    Notification,
 }
 
 export const MessageComponent = (props: { react: ReactInterface }) => {
@@ -18,7 +19,7 @@ export const MessageComponent = (props: { react: ReactInterface }) => {
     // @ts-ignore
     const [msgBuff, setMsgBuff] = props.react.useState<{ [key: string]: JSX.Element }>({});
 
-    const makeMessage = (type: Type, message: string | JSX.Element, key: string, options?: MessageOptions | DialogOptions) => {
+    const makeMessage = (type: Type, message: string | JSX.Element, key: string, options?: MessageOptions | DialogOptions | RexlNotificationOptions) => {
 
         if (type === Type.Message) {
             const options_ = options as MessageOptions;
@@ -60,9 +61,19 @@ export const MessageComponent = (props: { react: ReactInterface }) => {
                 ),
             };
         }
+        else if (type === Type.Notification) {
+            const options_ = options as RexlNotificationOptions;
+            return {
+                [key]: (
+                    <div style={options_.style!.thema}>
+                        {message}
+                    </div>
+                )
+            };
+        }
     };
 
-    msgOpenEvent = (type: Type, message: string | JSX.Element, options?: MessageOptions | DialogOptions) => {
+    msgOpenEvent = (type: Type, message: string | JSX.Element, options?: MessageOptions | DialogOptions | RexlNotificationOptions) => {
         const key = Math.random().toString();
         const newMsg = makeMessage(type, message, key, options);
         // @ts-ignore
@@ -71,7 +82,7 @@ export const MessageComponent = (props: { react: ReactInterface }) => {
             ...newMsg,
         });
 
-        if (type === Type.Dialog) {
+        if (type === Type.Message || type === Type.Notification) {
             if (options) {
                 if ((options as MessageOptions).timeout) {
                     setTimeout(()=>{

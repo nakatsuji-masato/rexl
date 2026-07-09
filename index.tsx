@@ -5,3 +5,4 @@ export * from "./src/Navi";
 export * from "./src/Message";
 export * from "./src/Dialog";
 export * from "./src/Form";
+export * from "./src/Notification";

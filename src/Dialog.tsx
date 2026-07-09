@@ -48,6 +48,16 @@ export interface DialogOptions {
 
         foot?: string | JSX.Element,
     },
+}
+
+export interface AlertDialogOptions extends DialogOptions {
+
+    okText?: string | JSX.Element,
+
+    okStyle?: React.CSSProperties,
+}
+
+export interface ConfirmDialogOptions extends DialogOptions {
 
     okText?: string | JSX.Element,
 
@@ -75,37 +85,50 @@ export const openDialog = (message: string | JSX.Element, options?: DialogOption
     
     if (!options) options = {};
     if (!options.style) options.style = {};
-        options.style.window = margeObj(options.style.window, dialogCss.window);
-        options.style.base = margeObj(options.style.base, dialogCss.base);
-        options.style.main = margeObj(options.style.main, dialogCss.main);
-        options.style.head = margeObj(options.style.head, dialogCss.head);
-        options.style.foot = margeObj(options.style.foot, dialogCss.foot);
-        if (!options.body) options.body = {};
+    if (!options.className) options.className = {};
+    if (!options.id) options.id = {};
+    if (!options.body) options.body = {};
+    options.style.window = margeObj(options.style.window, dialogCss.window);
+    options.style.base = margeObj(options.style.base, dialogCss.base);
+    options.style.main = margeObj(options.style.main, dialogCss.main);
+    options.style.head = margeObj(options.style.head, dialogCss.head);
+    options.style.foot = margeObj(options.style.foot, dialogCss.foot);
         
-        let k : string = "";
-        const messageBody = (
-            <>
-                <div style={dialogCss.wk}>
-                    {options.body!.head ?
-                        <div style={dialogCss.tr}>
-                            <div style={options.style!.head}>{options.body!.head}</div>
-                        </div>
-                    : ""}
+    const messageBody = (
+        <>
+            <div style={dialogCss.wk}>
+                {options.body!.head ?
                     <div style={dialogCss.tr}>
-                        <div style={options.style!.main}>{message}</div>
+                        <div 
+                        style={options.style!.head}
+                        className={options.className!.head} 
+                        id={options.id!.head}
+                        >{options.body!.head}</div>
                     </div>
-                    {options.body!.foot ?
-                    <div style={dialogCss.tr}>
-                        <div style={options.style!.foot}>{options.body!.foot}</div>
-                    </div>
-                    : ""}
+                : ""}
+                <div style={dialogCss.tr}>
+                    <div 
+                    style={options.style!.main}
+                    className={options.className!.main} 
+                    id={options.id!.main}
+                    >{message}</div>
                 </div>
-            </>
-        )
+                {options.body!.foot ?
+                <div style={dialogCss.tr}>
+                    <div 
+                    style={options.style!.foot}
+                    className={options.className!.foot} 
+                    id={options.id!.foot}
+                    >{options.body!.foot}</div>
+                </div>
+                : ""}
+            </div>
+        </>
+    );
     return msgOpenEvent(Type.Dialog, messageBody, options);
 };
 
-export const openDialogAlert = (message: string, options?: DialogOptions) => {
+export const openDialogAlert = (message: string, options?: AlertDialogOptions) => {
 
     return new Promise((resolve)=>{
         let k : string = "";
@@ -130,7 +153,7 @@ export const openDialogAlert = (message: string, options?: DialogOptions) => {
     });
 };
 
-export const openConfirm = (message: string, options?: DialogOptions) => {
+export const openConfirm = (message: string, options?: ConfirmDialogOptions) => {
 
     return new Promise((resolve)=>{
         let k : string = "";
@@ -145,18 +168,18 @@ export const openConfirm = (message: string, options?: DialogOptions) => {
                 <>
                     <a 
                         style={options!.ngStyle}
-                                onClick={()=>{
-                                    closeDialog(k);
-                                    resolve(false);
-                                    return false;
-                                }}>{options!.ngText}</a>               
-                                <a 
-                                style={options!.okStyle}
-                                onClick={()=>{
-                                    closeDialog(k);
-                                    resolve(true);
-                                    return false;
-                                }}>{options!.okText}
+                            onClick={()=>{
+                                closeDialog(k);
+                                resolve(false);
+                                return false;
+                            }}>{options!.ngText}</a>               
+                            <a 
+                            style={options!.okStyle}
+                            onClick={()=>{
+                                closeDialog(k);
+                                resolve(true);
+                                return false;
+                            }}>{options!.okText}
                     </a>
                 </>
             );
